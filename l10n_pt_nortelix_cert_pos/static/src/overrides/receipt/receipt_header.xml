@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_pt_nortelix_cert_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <!-- "Ticket <pos_reference>" é só a numeração interna do Odoo, sem valor fiscal —
+             quando existe documento certificado, substitui-se pelo tipo + série + número
+             reais (ex: "Fatura Simplificada FSDEMOCODE1-3"), que é o que a lei exige que
+             conste do talão. Sem fatura certificada (ex: empresa fora de Portugal),
+             mantém-se o comportamento original do Odoo. -->
+        <xpath expr="//span[hasclass('pos-receipt-vat')]" position="replace">
+            <span class="pos-receipt-vat" t-if="order.l10n_pt_nortelix_atcud">
+                <t t-esc="order.l10n_pt_nortelix_pos_document_label"/>
+            </span>
+            <span class="pos-receipt-vat" t-else="">
+                <span class="ticket-name-prefix">
+                    <t t-if="order.config._IS_VAT"> VAT </t>
+                    Ticket
+                </span>
+                <t t-out="order.pos_reference"/>
+            </span>
+        </xpath>
+    </t>
+</templates>

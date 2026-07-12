@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_l10n_pt_nortelix" model="ir.ui.view">
+        <field name="name">pos.config.view.form.l10n.pt.nortelix</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='configuration']/div[hasclass('o_settings_container')]"
+                   position="inside">
+                <setting string="Cliente por Omissão (AT)"
+                         help="Cliente usado quando uma venda é confirmada sem ninguém identificado — necessário para a Fatura Simplificada exigida por lei em toda a venda ao público.">
+                    <field name="l10n_pt_nortelix_default_partner_id"/>
+                </setting>
+                <setting string="Documento para Cliente Identificado (AT)"
+                         help="Tipo de documento emitido quando o cliente se identifica no POS com o próprio NIF.">
+                    <field name="l10n_pt_nortelix_identified_customer_document" widget="radio"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

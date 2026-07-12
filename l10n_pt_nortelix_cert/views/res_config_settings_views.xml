@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_pt_nortelix</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Certificação AT" string="Certificação AT"
+                     name="l10n_pt_nortelix_cert"
+                     groups="l10n_pt_nortelix_cert.group_l10n_pt_nortelix_at_manager">
+                    <block title="Ambiente" name="l10n_pt_nortelix_identification">
+                        <setting id="l10n_pt_nortelix_environment_setting"
+                                 string="Ambiente"
+                                 help="'Teste' não tem efeitos fiscais reais">
+                            <field name="l10n_pt_nortelix_environment" widget="radio"/>
+                        </setting>
+                    </block>
+                    <block title="Webservice AT" name="l10n_pt_nortelix_webservice">
+                        <setting id="l10n_pt_nortelix_ws_test_setting" string="WSDL de Teste">
+                            <field name="l10n_pt_nortelix_ws_wsdl_test_url" placeholder="https://..."/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_ws_prod_setting" string="WSDL de Produção">
+                            <field name="l10n_pt_nortelix_ws_wsdl_production_url" placeholder="https://..."/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_ws_user_setting" string="Utilizador">
+                            <field name="l10n_pt_nortelix_ws_username"/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_ws_pass_setting" string="Password">
+                            <field name="l10n_pt_nortelix_ws_password" password="True"/>
+                        </setting>
+                    </block>
+                    <block title="Licença e Assinatura Nortelix" name="l10n_pt_nortelix_license">
+                        <setting id="l10n_pt_nortelix_signing_url_setting"
+                                 string="Serviço de Assinatura"
+                                 help="Fornecido pela Nortelix">
+                            <field name="l10n_pt_nortelix_signing_service_url" placeholder="https://..."/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_license_key_setting"
+                                 string="Chave de Licença"
+                                 help="Fornecida pela Nortelix — sem ela (ou se for suspensa/revogada) não é possível emitir documentos fiscais">
+                            <field name="l10n_pt_nortelix_license_api_key" password="True"/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_test_license_setting" string="Testar Licença">
+                            <button name="%(action_at_company_setup_wizard)d" type="action"
+                                    string="Testar Licença Nortelix" class="btn-link"
+                                    icon="oi-arrow-right"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

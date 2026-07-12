@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_pt_nortelix_cert_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <!-- Pedido de fatura self-service ("Precisa de uma fatura?") deixa de fazer
+             sentido: toda a venda já gera sempre um documento certificado (ver
+             l10n_pt_nortelix_cert_pos/models/pos_order.py) — escondê-lo evita confundir
+             o cliente com um segundo pedido de algo que já tem nas mãos. -->
+        <xpath expr="//div[hasclass('pos-receipt-qr')]" position="attributes">
+            <attribute name="t-if">order.company.point_of_sale_use_ticket_qr_code and order.finalized and !order.l10n_pt_nortelix_atcud</attribute>
+        </xpath>
+
+        <!-- QR fiscal (Portaria 195/2020), ATCUD e rodapé legal (Portaria 363/2010, art.
+             6.º, n.º 3) — sempre presentes quando existe fatura certificada, nunca
+             configuráveis nem opcionais (ao contrário do cabeçalho/rodapé de marketing
+             em order.config.receipt_header/receipt_footer, esses continuam livres).
+             Lê os campos diretamente de `order` (espelhados de account_move em
+             pos_order.py), não de `order.account_move` — ver nota em pos_order.py sobre
+             a lista branca de account.move ser quebrada por um módulo Enterprise. -->
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <div t-if="order.l10n_pt_nortelix_atcud"
+                 class="pos-receipt-fiscal text-center pt-3" style="font-size: 75%;">
+                <img t-if="order.l10n_pt_nortelix_qr_code_url"
+                     t-att-src="order.l10n_pt_nortelix_qr_code_url"
+                     style="width:120px;height:120px;"/>
+                <div>
+                    ATCUD: <t t-esc="order.l10n_pt_nortelix_atcud"/>
+                </div>
+                <div t-if="order.l10n_pt_nortelix_hash_control">
+                    <t t-esc="order.l10n_pt_nortelix_hash_control"/>-Processado por programa certificado n.º
+                    <t t-esc="order.l10n_pt_nortelix_software_certificate_number"/>/AT
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_l10n_pt_nortelix_at_user" model="res.groups">
+        <field name="name">Certificação AT / Utilizador</field>
+    </record>
+
+    <record id="group_l10n_pt_nortelix_at_manager" model="res.groups">
+        <field name="name">Certificação AT / Gestor (acesso a chaves e credenciais)</field>
+        <field name="implied_ids" eval="[(4, ref('group_l10n_pt_nortelix_at_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

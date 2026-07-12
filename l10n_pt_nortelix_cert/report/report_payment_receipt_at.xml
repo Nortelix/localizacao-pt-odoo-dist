@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Um recibo que ainda não foi certificado (porque a reconciliação bancária ainda não
+         aconteceu, ver `_compute_state` em account_payment.py) não tem ATCUD/hash/QR no
+         canto superior direito — sem aviso, pareceria só um documento incompleto ou com um
+         bug. Este aviso deixa claro que é um estado transitório à espera de reconciliação,
+         não um erro. -->
+    <template id="report_payment_receipt_document_at" inherit_id="account.report_payment_receipt_document">
+        <xpath expr="//h3" position="after">
+            <div class="text-danger fw-bold mb-2" t-if="o.state == 'in_process'">
+                Pendente de Reconciliação
+            </div>
+        </xpath>
+    </template>
+</odoo>

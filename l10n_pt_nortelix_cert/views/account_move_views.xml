@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_l10n_pt_nortelix" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_pt_nortelix</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="oe_title" invisible="not l10n_pt_nortelix_atcud">
+                    <label for="l10n_pt_nortelix_atcud" string="ATCUD"/>
+                    <h3><field name="l10n_pt_nortelix_atcud"/></h3>
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Certificação Fiscal AT" name="l10n_pt_nortelix_at">
+                    <group>
+                        <field name="l10n_pt_nortelix_series_id" readonly="1"/>
+                        <field name="l10n_pt_nortelix_sequence_number" readonly="1"/>
+                        <field name="l10n_pt_nortelix_system_entry_date" readonly="1"/>
+                        <field name="l10n_pt_nortelix_hash" readonly="1"/>
+                        <field name="l10n_pt_nortelix_hash_control" readonly="1"/>
+                        <field name="l10n_pt_nortelix_algorithm_version" readonly="1"/>
+                        <field name="l10n_pt_nortelix_qr_code_data" readonly="1"/>
+                        <field name="l10n_pt_nortelix_qr_code_url" readonly="1" widget="url"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Auditoria: documentos assinados (ATCUD/hash), só consulta -->
+    <record id="view_l10n_pt_nortelix_signed_documents_list" model="ir.ui.view">
+        <field name="name">account.move.list.l10n_pt_nortelix.audit</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0" default_order="l10n_pt_nortelix_series_id, l10n_pt_nortelix_sequence_number">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="l10n_pt_nortelix_series_id"/>
+                <field name="l10n_pt_nortelix_sequence_number"/>
+                <field name="l10n_pt_nortelix_atcud"/>
+                <field name="l10n_pt_nortelix_hash_control"/>
+                <field name="amount_total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_pt_nortelix_signed_documents_search" model="ir.ui.view">
+        <field name="name">account.move.search.l10n_pt_nortelix.audit</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="l10n_pt_nortelix_atcud"/>
+                <field name="l10n_pt_nortelix_series_id"/>
+                <group>
+                    <filter name="group_by_series" string="Série AT"
+                            context="{'group_by': 'l10n_pt_nortelix_series_id'}"/>
+                    <filter name="group_by_month" string="Mês" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_l10n_pt_nortelix_signed_documents" model="ir.actions.act_window">
+        <field name="name">Documentos Assinados (Auditoria)</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('l10n_pt_nortelix_hash', '!=', False)]</field>
+        <field name="search_view_id" ref="view_l10n_pt_nortelix_signed_documents_search"/>
+        <field name="context">{'search_default_group_by_series': 1}</field>
+    </record>
+    <record id="ir_actions_act_window_view_signed_documents_list" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_l10n_pt_nortelix_signed_documents_list"/>
+        <field name="act_window_id" ref="action_l10n_pt_nortelix_signed_documents"/>
+    </record>
+
+    <menuitem id="menu_l10n_pt_nortelix_signed_documents"
+              name="Documentos Assinados"
+              parent="l10n_pt_nortelix_cert.menu_l10n_pt_nortelix_root"
+              action="action_l10n_pt_nortelix_signed_documents"
+              sequence="15"/>
+</odoo>

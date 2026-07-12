@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- O QR/ATCUD e o rodapé de certificação têm de ficar no canto superior direito e no
+         rodapé REAL da página (não no corpo do documento) — por isso a herança é feita no
+         layout partilhado (web.external_layout_standard), não em account.report_invoice_document.
+         Isto só cobre o tema "Standard" (o layout de documentos por omissão da empresa); se a
+         empresa mudar o tema em Definições > Definições Gerais > Documentos de Negócio para
+         Boxed/Bold/Folder/etc., este bloco tem de ser replicado no template equivalente. -->
+    <template id="external_layout_standard_at" inherit_id="web.external_layout_standard">
+        <!-- A linha do logótipo precisa de position:relative para servir de âncora ao QR
+             Code posicionado em absolute logo a seguir — sem isto, o QR seria posicionado
+             face à página inteira em vez de face a este cabeçalho. -->
+        <xpath expr="//div[hasclass('d-flex') and hasclass('justify-content-between')]"
+               position="attributes">
+            <attribute name="style">position:relative;</attribute>
+        </xpath>
+
+        <!-- QR Code (mínimo legal 3x3cm, Portaria 195/2020) com o ATCUD por baixo, no canto
+             superior direito, sobreposto ao cabeçalho (position:absolute) em vez de o
+             empurrar para baixo — o logótipo e a morada da empresa mantêm a posição normal.
+             Ancorado no logótipo (elemento sempre presente, classe estável). Restrito a
+             account.move/account.payment via o._name, porque este layout é partilhado por
+             TODOS os relatórios da empresa (orçamentos, encomendas, etc.), não só faturas
+             e recibos. -->
+        <xpath expr="//img[hasclass('o_company_logo_small')]" position="after">
+            <div class="text-center"
+                 style="position:absolute; top:0; right:0; width:3.4cm;"
+                 t-if="o and o._name in ('account.move', 'account.payment') and not proforma and o.l10n_pt_nortelix_qr_code_url">
+                <img t-att-src="o.l10n_pt_nortelix_qr_code_url" style="width:3.2cm;height:3.2cm;"/>
+                <!-- white-space:nowrap porque o ATCUD tem um hífen (ex: "12345678-11") e,
+                     sem isto, o motor de renderização trata o hífen como ponto de quebra de
+                     linha válido e parte o valor a meio mesmo havendo espaço de sobra. -->
+                <div class="small mt-1" style="white-space:nowrap; font-size:9px;">
+                    <strong>ATCUD:</strong> <span t-field="o.l10n_pt_nortelix_atcud"/>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Rodapé legal: "4 caracteres do hash" + expressão do nº de certificado, conforme
+             Portaria 363/2010, art. 6.º, n.º 3, alíneas a) e b). Colocado a seguir ao bloco de
+             contactos da empresa (o_footer_content), no rodapé real da página impressa. -->
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div class="text-muted small text-center"
+                 t-if="o and o._name in ('account.move', 'account.payment') and not proforma and o.l10n_pt_nortelix_hash_control">
+                <span t-field="o.l10n_pt_nortelix_hash_control"/>-Processado por programa certificado n.º
+                <span t-field="o.l10n_pt_nortelix_software_certificate_number"/>/AT
+            </div>
+        </xpath>
+
+        <!-- Ambiente de testes: marca de água em todas as páginas do documento, tornando
+             claro que não tem valor fiscal (a empresa não deve conseguir emitir documentos
+             "reais" com o ambiente AT em Teste sem isso ser óbvio a quem os lê).
+             position:fixed dentro do corpo repete-se em todas as páginas do PDF (truque
+             conhecido de renderização do wkhtmltopdf); âncora estável e única dentro deste
+             layout, sempre presente antes do conteúdo do documento em si. -->
+        <xpath expr="//t[@t-call='web.address_layout']" position="before">
+            <div t-if="o and o._name in ('account.move', 'account.payment') and o.company_id.l10n_pt_nortelix_environment == 'test'"
+                 style="position:fixed; top:45%; left:0; width:100%; text-align:center;
+                        transform:rotate(-30deg); font-size:34px; font-weight:bold;
+                        color:rgba(255,0,0,0.35); z-index:1000;">
+                Documento emitido para fins de formação
+            </div>
+        </xpath>
+    </template>
+</odoo>

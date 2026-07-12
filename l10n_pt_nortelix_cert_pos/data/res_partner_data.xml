@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- NIF genérico oficial de consumidor final em Portugal — referência nacional, não
+         específica de uma empresa (company_id vazio de propósito, partilhável por
+         qualquer empresa PT que instale este módulo). Usado como cliente por omissão do
+         POS quando ninguém se identifica, e como fallback do campo B do QR Code em
+         faturas/recibos (ver at_qrcode_service / account_move.py / account_payment.py). -->
+    <record id="partner_consumidor_final" model="res.partner">
+        <field name="name">Consumidor final</field>
+        <field name="vat">999999990</field>
+        <field name="country_id" ref="base.pt"/>
+        <field name="is_company" eval="False"/>
+    </record>
+</odoo>
