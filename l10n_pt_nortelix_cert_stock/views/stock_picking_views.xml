@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_l10n_pt_nortelix" model="ir.ui.view">
+        <field name="name">stock.picking.form.l10n_pt_nortelix</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="oe_title" invisible="not l10n_pt_nortelix_atcud">
+                    <label for="l10n_pt_nortelix_atcud" string="ATCUD"/>
+                    <h3><field name="l10n_pt_nortelix_atcud"/></h3>
+                </div>
+                <field name="l10n_pt_nortelix_dt_applicable" invisible="1"/>
+                <field name="l10n_pt_nortelix_dt_realtime_enabled" invisible="1"/>
+                <div class="alert alert-danger" role="alert"
+                     invisible="l10n_pt_nortelix_at_movement_status != 'A'">
+                    <strong>Guia ANULADA na AT</strong> em
+                    <field name="l10n_pt_nortelix_at_cancel_date" readonly="1" nolabel="1"/>.
+                    Motivo: <field name="l10n_pt_nortelix_at_cancel_reason" readonly="1" nolabel="1"/>
+                </div>
+                <div class="alert alert-danger" role="alert"
+                     invisible="not l10n_pt_nortelix_atcud or l10n_pt_nortelix_dt_status == 'sent'
+                                 or not l10n_pt_nortelix_dt_realtime_enabled">
+                    <strong>Esta guia ainda NÃO foi comunicada à AT (Documentos de Transporte).</strong>
+                    A comunicação em tempo real está ativa para esta série — o envio deveria
+                    ter sido automático ao confirmar a guia ("Marcar como a Fazer").
+                    Consulte a página "Certificação Fiscal AT" e use "Reenviar à AT".
+                </div>
+                <div class="alert alert-info" role="alert"
+                     invisible="not l10n_pt_nortelix_atcud or l10n_pt_nortelix_dt_status == 'sent'
+                                 or l10n_pt_nortelix_dt_realtime_enabled">
+                    <strong>Esta guia não foi comunicada à AT (Documentos de Transporte).</strong>
+                    A comunicação automática em tempo real está desativada para a série desta
+                    guia — envie manualmente na página "Certificação Fiscal AT", se aplicável.
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Certificação Fiscal AT" name="l10n_pt_nortelix_at"
+                      invisible="not l10n_pt_nortelix_dt_applicable and not l10n_pt_nortelix_atcud">
+                    <group string="Valorização (opcional)"
+                           invisible="l10n_pt_nortelix_atcud">
+                        <p class="text-muted" colspan="2">
+                            Preencha o preço unitário e o imposto de cada linha abaixo
+                            para emitir esta guia VALORIZADA (com discriminação de IVA
+                            na assinatura, QR Code e comunicação à AT). Deixe a 0.0 para
+                            uma guia não valorizada — comportamento por omissão.
+                        </p>
+                        <field name="move_ids" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="product_id" readonly="1"/>
+                                <field name="product_uom_qty" readonly="1"/>
+                                <field name="l10n_pt_nortelix_unit_price"/>
+                                <field name="l10n_pt_nortelix_tax_ids" widget="many2many_tags"
+                                       domain="[('type_tax_use', '=', 'sale')]"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="l10n_pt_nortelix_series_id" readonly="1"/>
+                        <field name="l10n_pt_nortelix_sequence_number" readonly="1"/>
+                        <field name="l10n_pt_nortelix_system_entry_date" readonly="1"/>
+                        <field name="l10n_pt_nortelix_hash" readonly="1"/>
+                        <field name="l10n_pt_nortelix_hash_control" readonly="1"/>
+                        <field name="l10n_pt_nortelix_algorithm_version" readonly="1"/>
+                        <field name="l10n_pt_nortelix_qr_code_data" readonly="1"/>
+                        <field name="l10n_pt_nortelix_qr_code_url" readonly="1" widget="url"/>
+                    </group>
+                    <group string="Documentos de Transporte" invisible="not l10n_pt_nortelix_atcud">
+                        <field name="l10n_pt_nortelix_dt_status" readonly="1"/>
+                        <field name="l10n_pt_nortelix_dt_sent_at" readonly="1"/>
+                        <field name="l10n_pt_nortelix_dt_response_code" readonly="1"/>
+                        <field name="l10n_pt_nortelix_dt_response_message" readonly="1"/>
+                        <button name="action_l10n_pt_nortelix_retry_transport_document" type="object"
+                                string="Reenviar à AT" class="btn-secondary"
+                                invisible="l10n_pt_nortelix_dt_status == 'sent'"/>
+                    </group>
+                    <group string="Anulação na AT"
+                           invisible="l10n_pt_nortelix_dt_status != 'sent'">
+                        <field name="l10n_pt_nortelix_at_movement_status" readonly="1"/>
+                        <field name="l10n_pt_nortelix_at_cancel_date" readonly="1"
+                               invisible="l10n_pt_nortelix_at_movement_status != 'A'"/>
+                        <field name="l10n_pt_nortelix_at_cancel_reason" readonly="1"
+                               invisible="l10n_pt_nortelix_at_movement_status != 'A'"/>
+                        <button name="action_l10n_pt_nortelix_open_cancel_wizard" type="object"
+                                string="Anular Guia na AT" class="btn-danger"
+                                invisible="l10n_pt_nortelix_at_movement_status == 'A'"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

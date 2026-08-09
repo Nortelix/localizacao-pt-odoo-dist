@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_at_cancel_picking_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pt_nortelix.cancel.picking.wizard.form</field>
+        <field name="model">l10n_pt_nortelix.cancel.picking.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="picking_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert">
+                    Esta ação comunica à AT que a guia fica anulada (estado "A" nos
+                    Documentos de Transporte). A guia continua a existir na Odoo tal como
+                    está — nunca é apagada nem reaberta para edição.
+                </div>
+                <group>
+                    <field name="reason" nolabel="1" placeholder="Motivo da anulação (mínimo 10 caracteres)..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirmar Anulação"
+                            class="btn-danger"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

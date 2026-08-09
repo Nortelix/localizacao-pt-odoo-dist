@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_l10n_pt_nortelix" model="ir.ui.view">
+        <field name="name">sale.order.form.l10n_pt_nortelix</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Uma encomenda pode ter dois ATCUD ao longo do ciclo de vida (Orçamento,
+                 depois Nota de Encomenda) — mostra o mais avançado disponível: NE tem
+                 prioridade sobre OR assim que existir. -->
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="oe_title" invisible="not l10n_pt_nortelix_atcud">
+                    <label for="l10n_pt_nortelix_atcud" string="ATCUD (Nota de Encomenda)"/>
+                    <h3><field name="l10n_pt_nortelix_atcud"/></h3>
+                </div>
+                <div class="oe_title" invisible="l10n_pt_nortelix_atcud or not l10n_pt_nortelix_or_atcud">
+                    <label for="l10n_pt_nortelix_or_atcud" string="ATCUD (Orçamento)"/>
+                    <h3><field name="l10n_pt_nortelix_or_atcud"/></h3>
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Certificação Fiscal AT" name="l10n_pt_nortelix_at"
+                      invisible="not l10n_pt_nortelix_atcud and not l10n_pt_nortelix_or_atcud">
+                    <group string="Orçamento (OR)" invisible="not l10n_pt_nortelix_or_atcud">
+                        <field name="l10n_pt_nortelix_or_series_id" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_sequence_number" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_system_entry_date" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_hash" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_hash_control" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_algorithm_version" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_qr_code_data" readonly="1"/>
+                        <field name="l10n_pt_nortelix_or_qr_code_url" readonly="1" widget="url"/>
+                    </group>
+                    <group string="Nota de Encomenda (NE)" invisible="not l10n_pt_nortelix_atcud">
+                        <field name="l10n_pt_nortelix_series_id" readonly="1"/>
+                        <field name="l10n_pt_nortelix_sequence_number" readonly="1"/>
+                        <field name="l10n_pt_nortelix_system_entry_date" readonly="1"/>
+                        <field name="l10n_pt_nortelix_hash" readonly="1"/>
+                        <field name="l10n_pt_nortelix_hash_control" readonly="1"/>
+                        <field name="l10n_pt_nortelix_algorithm_version" readonly="1"/>
+                        <field name="l10n_pt_nortelix_qr_code_data" readonly="1"/>
+                        <field name="l10n_pt_nortelix_qr_code_url" readonly="1" widget="url"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

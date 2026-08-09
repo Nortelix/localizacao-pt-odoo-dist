@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_l10n_pt_nortelix_stock" model="ir.ui.view">
+        <field name="name">res.company.form.l10n_pt_nortelix.stock</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="l10n_pt_nortelix_cert.view_company_form_l10n_pt_nortelix"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='l10n_pt_nortelix_at']/group[1]" position="inside">
+                <group string="Webservice AT (Documentos de Transporte)">
+                    <field name="l10n_pt_nortelix_dt_wsdl_test_url"/>
+                    <field name="l10n_pt_nortelix_dt_wsdl_production_url"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

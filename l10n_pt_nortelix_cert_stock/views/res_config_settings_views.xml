@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_pt_nortelix.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pt_nortelix_cert.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='l10n_pt_nortelix_license']" position="before">
+                <block title="Webservice AT — Documentos de Transporte" name="l10n_pt_nortelix_dt_webservice">
+                    <setting id="l10n_pt_nortelix_dt_test_setting" string="WSDL de Teste">
+                        <field name="l10n_pt_nortelix_dt_wsdl_test_url" placeholder="https://..."/>
+                    </setting>
+                    <setting id="l10n_pt_nortelix_dt_prod_setting" string="WSDL de Produção">
+                        <field name="l10n_pt_nortelix_dt_wsdl_production_url" placeholder="https://..."/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

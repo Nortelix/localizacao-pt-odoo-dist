@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- code "NE": confirmado contra a documentação oficial embutida no XSD local do SAF-T
+     (saftpt1.04_01.xsd, elemento WorkType — "NE para nota de encomenda").
+
+     CORREÇÃO (2026-08-09): a nota anterior aqui dizia que Notas de Encomenda não
+     precisavam de série comunicada à AT — está ERRADA. Todo o documento suscetível de
+     ser entregue ao cliente para conferência de bens/serviços (incl. Notas de
+     Encomenda) tem de ter ATCUD proveniente de uma série efetivamente comunicada, não
+     um código gerado localmente — `at_series.py:build_atcud()` já reflete isto (recusa
+     construir ATCUD sem `validation_code`). A infraestrutura genérica de
+     l10n_pt_nortelix_cert (menu "Séries AT" > wizard "Comunicar à AT") já funciona para
+     este tipo de série sem alterações — `series_type_id` nunca esteve restrito por
+     modelo.
+
+     classe_doc: revertido para vazio (tinha sido posto "SI" por engano). Confirmado via
+     guia oficial de um fornecedor de ERP (eticadata, "Comunicação das séries à AT ATCUD
+     e QR CODE", Julho.2022) que "Documentos de Conferência" é mesmo uma classe própria
+     e distinta de "Faturas" — corresponde a WorkingDocuments no SAF-T, não a
+     SalesInvoices (SI). Citação: "Classe de documento – Indicar se são Faturas ou
+     Documentos Retificativos, Documentos de Transporte, Documentos de Conferência ou
+     Recibos [...] deverá inferir respetivamente 'SalesInvoices', 'MovementOfGoods',
+     'WorkingDocuments' ou 'Payments'." O código de 2 letras real para esta classe não
+     foi encontrado em nenhuma fonte pesquisada (WSDL/XSD oficiais, cliente Go
+     open-source github.com/hestiatechnology/autoridadetributaria, documentação de
+     vários fornecedores de software de faturação, FAQ da AT) — confirmar junto da
+     AT/contabilista antes de preencher. Enquanto vazio, usar o modo MANUAL do wizard
+     "Comunicar à AT" (código obtido no Portal das Finanças).
+
+     code "OR": mesma confirmação de fonte que "NE" (comentário do elemento WorkType no
+     XSD: "OR para orcamento"). Documento irmão de "NE" — mesma classe "Documentos de
+     Conferência", mesma situação de classe_doc por confirmar. Assinado quando a cotação
+     é enviada ao cliente (sale.order em estado draft → sent), ver models/sale_order.py
+     write(). -->
+<odoo noupdate="1">
+    <record id="series_type_ne" model="l10n_pt_nortelix.series.type">
+        <field name="code">NE</field>
+        <field name="name">Nota de Encomenda</field>
+        <field name="applies_to_model">sale.order</field>
+    </record>
+    <record id="series_type_or" model="l10n_pt_nortelix.series.type">
+        <field name="code">OR</field>
+        <field name="name">Orçamento</field>
+        <field name="applies_to_model">sale.order</field>
+    </record>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mesma convenção de l10n_pt_nortelix_cert/report/report_invoice_at.xml
+         (report_invoice_document_at): mostra o número fiscal em vez da numeração
+         interna da Odoo (ex: "S00001") assim que a encomenda está assinada — é o número
+         que a AT e o cliente reconhecem, a numeração interna é só um identificador de
+         sequência de base de dados, sem significado fiscal. Aqui também o RÓTULO muda
+         (ex: "Orçamento #" em vez de "Cotação #", "Nota de Encomenda #" em vez de
+         "Ordem #") — o nome do tipo de documento tem de bater certo com o número que o
+         acompanha, não faz sentido mostrar "Cotação # OR 1/2".
+
+         l10n_pt_nortelix_kind resolvido uma vez só, reaproveitado no rótulo e no
+         número: NE assinada tem prioridade (documento mais avançado, encomenda já
+         confirmada); senão OR assinado (ainda só enviada, nunca confirmada); senão
+         False, e mantém-se o comportamento nativo da Odoo (rascunho nunca
+         enviado/impresso, ou empresa fora de Portugal). "not is_proforma" porque a
+         impressão em modo Pró-Forma esconde propositadamente o ATCUD/QR, tal como já
+         acontece para faturas. -->
+    <template id="report_saleorder_document_at" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="l10n_pt_nortelix_kind"
+               t-value="'NE' if (doc.l10n_pt_nortelix_atcud and not is_proforma) else ('OR' if (doc.l10n_pt_nortelix_or_atcud and not is_proforma) else False)"/>
+            <t t-set="layout_document_title">
+                <span t-if="l10n_pt_nortelix_kind == 'NE'">Nota de Encomenda # </span>
+                <span t-elif="l10n_pt_nortelix_kind == 'OR'">Orçamento # </span>
+                <span t-elif="is_proforma">Pro-Forma Invoice # </span>
+                <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
+                <span t-else="">Order # </span>
+                <span t-if="l10n_pt_nortelix_kind"
+                      t-out="doc._l10n_pt_nortelix_document_number(l10n_pt_nortelix_kind)">NE A/1</span>
+                <span t-else="" t-field="doc.name">SO0000</span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

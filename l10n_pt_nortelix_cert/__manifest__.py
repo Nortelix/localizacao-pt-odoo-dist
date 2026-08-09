@@ -37,6 +37,7 @@ Depende apenas de `account`, para funcionar em Odoo Community e Enterprise.
         "report/report_invoice_at.xml",
         "report/report_payment_receipt_at.xml",
     ],
+    "post_init_hook": "_l10n_pt_nortelix_set_default_signing_service_url",
     "installable": True,
     "application": True,
 }
