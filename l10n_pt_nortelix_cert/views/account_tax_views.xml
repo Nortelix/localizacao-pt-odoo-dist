@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form_inherit_l10n_pt_nortelix_cert" model="ir.ui.view">
+        <field name="name">l10n.pt.nortelix.inherit.account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="l10n_pt_nortelix_exemption_code"
+                       invisible="amount != 0"
+                       placeholder="M01" />
+                <field name="l10n_pt_nortelix_exemption_reason"
+                       invisible="amount != 0"
+                       placeholder="Artigo 16.º, n.º 6 do CIVA" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

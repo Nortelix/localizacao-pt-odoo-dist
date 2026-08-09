@@ -50,4 +50,27 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+    <record id="view_at_cancel_invoice_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_pt_nortelix.cancel.invoice.wizard.form</field>
+        <field name="model">l10n_pt_nortelix.cancel.invoice.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="move_id" invisible="1"/>
+                <div class="alert alert-warning" role="alert">
+                    Esta ação comunica à AT que o documento fica anulado (estado "A" no
+                    e-Fatura). O documento continua a existir na Odoo tal como está — nunca
+                    é apagado nem reaberto para edição.
+                </div>
+                <group>
+                    <field name="reason" nolabel="1" placeholder="Motivo da anulação (mínimo 10 caracteres)..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirmar Anulação"
+                            class="btn-danger"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

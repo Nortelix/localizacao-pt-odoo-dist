@@ -1,39 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- classe_doc: preenchido com a classificação de série conhecida da AT (SI = documentos
+     de faturação, MG = movimentação de bens/documentos de transporte, PY = recibos) —
+     ver aviso de não confirmação no campo classe_doc do modelo l10n_pt_nortelix.series.type. -->
 <odoo noupdate="1">
     <record id="series_type_ft" model="l10n_pt_nortelix.series.type">
         <field name="code">FT</field>
         <field name="name">Fatura</field>
         <field name="applies_to_model">account.move</field>
+        <field name="classe_doc">SI</field>
     </record>
     <record id="series_type_fs" model="l10n_pt_nortelix.series.type">
         <field name="code">FS</field>
         <field name="name">Fatura Simplificada</field>
         <field name="applies_to_model">account.move</field>
+        <field name="classe_doc">SI</field>
     </record>
     <record id="series_type_fr" model="l10n_pt_nortelix.series.type">
         <field name="code">FR</field>
         <field name="name">Fatura-Recibo</field>
         <field name="applies_to_model">account.move</field>
+        <field name="classe_doc">SI</field>
     </record>
     <record id="series_type_nc" model="l10n_pt_nortelix.series.type">
         <field name="code">NC</field>
         <field name="name">Nota de Crédito</field>
         <field name="applies_to_model">account.move</field>
+        <field name="classe_doc">SI</field>
     </record>
     <record id="series_type_nd" model="l10n_pt_nortelix.series.type">
         <field name="code">ND</field>
         <field name="name">Nota de Débito</field>
         <field name="applies_to_model">account.move</field>
+        <field name="classe_doc">SI</field>
     </record>
     <record id="series_type_gt" model="l10n_pt_nortelix.series.type">
         <field name="code">GT</field>
         <field name="name">Guia de Transporte</field>
         <field name="applies_to_model">stock.picking</field>
+        <field name="classe_doc">MG</field>
     </record>
     <record id="series_type_gr" model="l10n_pt_nortelix.series.type">
         <field name="code">GR</field>
         <field name="name">Guia de Remessa</field>
         <field name="applies_to_model">stock.picking</field>
+        <field name="classe_doc">MG</field>
+    </record>
+    <record id="series_type_ga" model="l10n_pt_nortelix.series.type">
+        <field name="code">GA</field>
+        <field name="name">Guia de Movimentação de Ativos Próprios</field>
+        <field name="applies_to_model">stock.picking</field>
+        <field name="classe_doc">MG</field>
+    </record>
+    <record id="series_type_gc" model="l10n_pt_nortelix.series.type">
+        <field name="code">GC</field>
+        <field name="name">Guia de Consignação</field>
+        <field name="applies_to_model">stock.picking</field>
+        <field name="classe_doc">MG</field>
+    </record>
+    <record id="series_type_gd" model="l10n_pt_nortelix.series.type">
+        <field name="code">GD</field>
+        <field name="name">Guia ou Nota de Devolução</field>
+        <field name="applies_to_model">stock.picking</field>
+        <field name="classe_doc">MG</field>
     </record>
     <!-- "RC" (regime de IVA de caixa) e "RG" (regime normal) são os dois tipos de recibo
          previstos no PaymentType do SAF-T (PT) — confirmado contra a documentação da AT.
@@ -44,10 +72,12 @@
         <field name="code">RC</field>
         <field name="name">Recibo (regime de IVA de caixa)</field>
         <field name="applies_to_model">account.payment</field>
+        <field name="classe_doc">PY</field>
     </record>
     <record id="series_type_rg" model="l10n_pt_nortelix.series.type">
         <field name="code">RG</field>
         <field name="name">Recibo</field>
         <field name="applies_to_model">account.payment</field>
+        <field name="classe_doc">PY</field>
     </record>
 </odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Processa em segundo plano os documentos assinados ainda por comunicar ao
+         e-Fatura — ver a nota em account_move.py's _post()/
+         _l10n_pt_nortelix_cron_send_pending_efatura sobre porquê isto não corre
+         diretamente no posting (chamada SOAP real à AT, bloquearia o "Validar" do POS
+         por vários segundos). Intervalo de 1 minuto: o mais frequente que o ir.cron
+         standard permite (não há unidade "segundos"), suficiente para continuar a
+         cumprir a obrigação de comunicação "em tempo real" (distinta de mensal/em
+         lote, como o SAF-T). -->
+    <record id="ir_cron_l10n_pt_nortelix_send_pending_efatura" model="ir.cron">
+        <field name="name">e-Fatura: comunicar documentos pendentes à AT</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._l10n_pt_nortelix_cron_send_pending_efatura()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

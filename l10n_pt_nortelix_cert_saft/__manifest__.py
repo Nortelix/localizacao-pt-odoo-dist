@@ -9,8 +9,11 @@ documentos assinados pelo módulo `l10n_pt_nortelix_cert`.
 
 Cobre: Header, MasterFiles (Customer, Product, TaxTable), SourceDocuments/SalesInvoices
 e SourceDocuments/Payments (recibos, regime normal — código "RG").
-NÃO cobre (fora de âmbito): MovementOfGoods, WorkingDocuments, regime de IVA de caixa
-("RC"), SAF-T de Contabilidade (obrigação distinta, com calendário próprio).
+SourceDocuments/WorkingDocuments (Notas de Encomenda) é incluído automaticamente quando
+o módulo `l10n_pt_nortelix_cert_sale` também está instalado — sem dependência rígida
+deste módulo em relação a `sale` (ver builder.py, get_exportable_orders).
+NÃO cobre (fora de âmbito): MovementOfGoods, regime de IVA de caixa ("RC"), SAF-T de
+Contabilidade (obrigação distinta, com calendário próprio).
 
 Antes de qualquer submissão real à AT, validar o XML gerado contra o XSD oficial
 1.04_01 publicado pela Autoridade Tributária.

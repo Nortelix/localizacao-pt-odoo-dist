@@ -21,17 +21,41 @@
              Ancorado no logótipo (elemento sempre presente, classe estável). Restrito a
              account.move/account.payment via o._name, porque este layout é partilhado por
              TODOS os relatórios da empresa (orçamentos, encomendas, etc.), não só faturas
-             e recibos. -->
+             e recibos — sale.order tem o seu próprio bloco a seguir (pode ter DOIS
+             documentos assinados, Orçamento e Nota de Encomenda, por isso não cabe nesta
+             mesma condição de "um só campo").
+             Tamanho em px, não cm/mm: o wkhtmltopdf (motor usado para o PDF real, diferente
+             do motor de impressão do browser) não redimensiona de forma fiável <img> por
+             unidades físicas CSS, sobretudo dentro de position:absolute — o próprio Odoo
+             evita cm/mm nos QR/barcode dos módulos l10n_* nativos pela mesma razão, e
+             controla o tamanho só pela resolução nativa do PNG. 140px ~= 3.7cm a 96dpi,
+             folgadamente acima do mínimo legal. -->
         <xpath expr="//img[hasclass('o_company_logo_small')]" position="after">
             <div class="text-center"
-                 style="position:absolute; top:0; right:0; width:3.4cm;"
+                 style="position:absolute; top:0; right:0; width:150px;"
                  t-if="o and o._name in ('account.move', 'account.payment') and not proforma and o.l10n_pt_nortelix_qr_code_url">
-                <img t-att-src="o.l10n_pt_nortelix_qr_code_url" style="width:3.2cm;height:3.2cm;"/>
+                <img t-att-src="o.l10n_pt_nortelix_qr_code_url" style="width:140px;height:140px;"/>
                 <!-- white-space:nowrap porque o ATCUD tem um hífen (ex: "12345678-11") e,
                      sem isto, o motor de renderização trata o hífen como ponto de quebra de
                      linha válido e parte o valor a meio mesmo havendo espaço de sobra. -->
                 <div class="small mt-1" style="white-space:nowrap; font-size:9px;">
                     <strong>ATCUD:</strong> <span t-field="o.l10n_pt_nortelix_atcud"/>
+                </div>
+            </div>
+            <!-- sale.order: pode ter Nota de Encomenda (NE) assinada, só Orçamento (OR)
+                 assinado, ou nenhum ainda — mostra o mais avançado disponível, NE tem
+                 prioridade. Só entra em jogo quando l10n_pt_nortelix_cert_sale estiver
+                 instalado (os campos l10n_pt_nortelix_(or_)qr_code_url simplesmente não
+                 existem/ficam vazios caso contrário). -->
+            <div class="text-center"
+                 style="position:absolute; top:0; right:0; width:150px;"
+                 t-if="o and o._name == 'sale.order' and not proforma and (o.l10n_pt_nortelix_qr_code_url or o.l10n_pt_nortelix_or_qr_code_url)">
+                <img t-att-src="o.l10n_pt_nortelix_qr_code_url or o.l10n_pt_nortelix_or_qr_code_url"
+                     style="width:140px;height:140px;"/>
+                <div class="small mt-1" style="white-space:nowrap; font-size:9px;">
+                    <strong>ATCUD:</strong>
+                    <span t-field="o.l10n_pt_nortelix_atcud" t-if="o.l10n_pt_nortelix_atcud"/>
+                    <span t-field="o.l10n_pt_nortelix_or_atcud" t-else=""/>
                 </div>
             </div>
         </xpath>
@@ -45,6 +69,13 @@
                 <span t-field="o.l10n_pt_nortelix_hash_control"/>-Processado por programa certificado n.º
                 <span t-field="o.l10n_pt_nortelix_software_certificate_number"/>/AT
             </div>
+            <div class="text-muted small text-center"
+                 t-if="o and o._name == 'sale.order' and not proforma and (o.l10n_pt_nortelix_hash_control or o.l10n_pt_nortelix_or_hash_control)">
+                <span t-field="o.l10n_pt_nortelix_hash_control" t-if="o.l10n_pt_nortelix_hash_control"/>
+                <span t-field="o.l10n_pt_nortelix_or_hash_control" t-else=""/>
+                -Processado por programa certificado n.º
+                <span t-field="o.l10n_pt_nortelix_software_certificate_number"/>/AT
+            </div>
         </xpath>
 
         <!-- Ambiente de testes: marca de água em todas as páginas do documento, tornando
@@ -54,12 +85,51 @@
              conhecido de renderização do wkhtmltopdf); âncora estável e única dentro deste
              layout, sempre presente antes do conteúdo do documento em si. -->
         <xpath expr="//t[@t-call='web.address_layout']" position="before">
-            <div t-if="o and o._name in ('account.move', 'account.payment') and o.company_id.l10n_pt_nortelix_environment == 'test'"
+            <div t-if="o and o._name in ('account.move', 'account.payment', 'sale.order') and o.company_id.l10n_pt_nortelix_environment == 'test'"
                  style="position:fixed; top:45%; left:0; width:100%; text-align:center;
                         transform:rotate(-30deg); font-size:34px; font-weight:bold;
                         color:rgba(255,0,0,0.35); z-index:1000;">
                 Documento emitido para fins de formação
             </div>
+            <!-- Ponto 5.2 do Ofício AT 101/2026: um documento anulado tem de mostrar isso
+                 "de forma visível" no PDF — marca de água distinta da de ambiente de teste
+                 (podem coexistir) mais um bloco de texto com data/motivo, já que uma marca
+                 de água sozinha (sem contexto) não chega para uma prova documental. -->
+            <div t-if="o and o._name == 'account.move' and o.l10n_pt_nortelix_at_invoice_status == 'A'"
+                 style="position:fixed; top:55%; left:0; width:100%; text-align:center;
+                        transform:rotate(-30deg); font-size:48px; font-weight:bold;
+                        color:rgba(0,0,0,0.45); z-index:1001;">
+                DOCUMENTO ANULADO
+            </div>
+        </xpath>
+
+        <xpath expr="//t[@t-call='web.address_layout']" position="after">
+            <div t-if="o and o._name == 'account.move' and o.l10n_pt_nortelix_at_invoice_status == 'A'"
+                 class="alert alert-danger text-center" style="font-weight:bold;">
+                DOCUMENTO ANULADO na Autoridade Tributária em
+                <span t-field="o.l10n_pt_nortelix_at_cancel_date"/>.
+                Motivo: <span t-field="o.l10n_pt_nortelix_at_cancel_reason"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Mostra o número fiscal (ex: "FT 2026/1") em vez da numeração interna da Odoo
+         (ex: "INV/2026/00036") no título do documento — é o número que a AT e o
+         cliente reconhecem (Portaria 195/2020), a numeração interna da Odoo é só um
+         identificador de sequência de base de dados, sem significado fiscal. Só depois
+         de assinado (l10n_pt_nortelix_atcud definido); antes disso (rascunho, ou
+         empresa fora de Portugal) mantém-se o número da Odoo, tal como o core faz. -->
+    <template id="report_invoice_document_at" inherit_id="account.report_invoice_document">
+        <xpath expr="//span[@t-field='o.name']" position="replace">
+            <span t-if="o.l10n_pt_nortelix_atcud" t-out="o._l10n_pt_nortelix_document_number()">FT 2026/1</span>
+            <span t-elif="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
+        </xpath>
+        <!-- Mesmo princípio, para o campo "Origem" (ex: uma encomenda de venda): mostra
+             o número fiscal do documento de origem (ex: "NE A/1") em vez do nome interno
+             da Odoo (ex: "S00001") — ver _l10n_pt_nortelix_origin_display() em
+             account_move.py (aqui) e a sua sobreposição em l10n_pt_nortelix_cert_sale. -->
+        <xpath expr="//div[@t-field='o.invoice_origin']" position="replace">
+            <div t-out="o._l10n_pt_nortelix_origin_display()">SO123</div>
         </xpath>
     </template>
 </odoo>

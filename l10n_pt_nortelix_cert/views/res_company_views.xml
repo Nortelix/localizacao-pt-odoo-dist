@@ -18,6 +18,7 @@
                             <field name="l10n_pt_nortelix_ws_wsdl_production_url"/>
                             <field name="l10n_pt_nortelix_ws_username"/>
                             <field name="l10n_pt_nortelix_ws_password" password="True"/>
+                            <field name="l10n_pt_nortelix_series_meio_processamento"/>
                         </group>
                     </group>
                     <group string="Licença e Assinatura Nortelix">

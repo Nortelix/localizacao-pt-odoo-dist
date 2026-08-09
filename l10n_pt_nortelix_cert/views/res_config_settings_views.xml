@@ -16,18 +16,39 @@
                             <field name="l10n_pt_nortelix_environment" widget="radio"/>
                         </setting>
                     </block>
-                    <block title="Webservice AT" name="l10n_pt_nortelix_webservice">
+                    <block title="Webservice AT — Séries" name="l10n_pt_nortelix_webservice">
                         <setting id="l10n_pt_nortelix_ws_test_setting" string="WSDL de Teste">
                             <field name="l10n_pt_nortelix_ws_wsdl_test_url" placeholder="https://..."/>
                         </setting>
                         <setting id="l10n_pt_nortelix_ws_prod_setting" string="WSDL de Produção">
                             <field name="l10n_pt_nortelix_ws_wsdl_production_url" placeholder="https://..."/>
                         </setting>
-                        <setting id="l10n_pt_nortelix_ws_user_setting" string="Utilizador">
+                        <setting id="l10n_pt_nortelix_ws_user_setting" string="Utilizador"
+                                 help="Subutilizador (perfil WebServices) do NIF, criado no Portal das Finanças — comum a todos os webservices da AT">
                             <field name="l10n_pt_nortelix_ws_username"/>
                         </setting>
                         <setting id="l10n_pt_nortelix_ws_pass_setting" string="Password">
                             <field name="l10n_pt_nortelix_ws_password" password="True"/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_series_meio_proc_setting"
+                                 string="Código de Meio de Processamento"
+                                 help="Confirme o código junto da AT antes de comunicar séries — sem valor por omissão de propósito">
+                            <field name="l10n_pt_nortelix_series_meio_processamento"/>
+                        </setting>
+                    </block>
+                    <block title="Comunicação em Tempo Real" name="l10n_pt_nortelix_realtime">
+                        <setting id="l10n_pt_nortelix_realtime_setting"
+                                 string="Comunicação em Tempo Real Ativa"
+                                 help="Desligar bloqueia TODA a comunicação em tempo real à AT (e-Fatura, Documentos de Transporte), mesmo reenvios manuais — sobrepõe-se ao interruptor de cada série. A assinatura digital e o SAF-T não são afetados.">
+                            <field name="l10n_pt_nortelix_realtime_communication_enabled"/>
+                        </setting>
+                    </block>
+                    <block title="Webservice AT — e-Fatura" name="l10n_pt_nortelix_efatura_webservice">
+                        <setting id="l10n_pt_nortelix_efatura_test_setting" string="WSDL de Teste">
+                            <field name="l10n_pt_nortelix_efatura_wsdl_test_url" placeholder="https://..."/>
+                        </setting>
+                        <setting id="l10n_pt_nortelix_efatura_prod_setting" string="WSDL de Produção">
+                            <field name="l10n_pt_nortelix_efatura_wsdl_production_url" placeholder="https://..."/>
                         </setting>
                     </block>
                     <block title="Licença e Assinatura Nortelix" name="l10n_pt_nortelix_license">

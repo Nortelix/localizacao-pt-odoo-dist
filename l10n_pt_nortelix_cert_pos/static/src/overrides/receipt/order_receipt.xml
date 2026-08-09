@@ -19,9 +19,15 @@
         <xpath expr="//div[hasclass('before-footer')]" position="inside">
             <div t-if="order.l10n_pt_nortelix_atcud"
                  class="pos-receipt-fiscal text-center pt-3" style="font-size: 75%;">
+                <!-- 120px chegava para um QR curto, mas a string do QR fiscal (campos
+                     A-R, Despacho SECEF 8632/2014) é longa e exige um QR com muitos
+                     módulos — a essa exibição, cada módulo ficava com poucos pontos
+                     físicos na impressora térmica (~2-3, insuficiente para digitalizar
+                     de forma fiável; o recomendado é pelo menos 4). 280px dá margem
+                     confortável. -->
                 <img t-if="order.l10n_pt_nortelix_qr_code_url"
                      t-att-src="order.l10n_pt_nortelix_qr_code_url"
-                     style="width:120px;height:120px;"/>
+                     style="width:280px;height:280px;"/>
                 <div>
                     ATCUD: <t t-esc="order.l10n_pt_nortelix_atcud"/>
                 </div>
